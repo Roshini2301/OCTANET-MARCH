@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> To-Do List</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  h1 {
+    text-align: center;
+  }
+  .task-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .completed {
+    text-decoration: line-through;
+    color: #888;
+  }
+  .delete {
+    color: #f00;
+    float: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Unique To-Do List</h1>
+  <input type="text" id="taskInput" placeholder="Add new task...">
+  <input type="color" id="colorPicker" value="#f9f9f9">
+  <button id="addTaskBtn">Add Task</button>
+  <ul id="taskList" class="task-list"></ul>
+</div>
+
+<script>
+  const taskInput = document.getElementById('taskInput');
+  const colorPicker = document.getElementById('colorPicker');
+  const addTaskBtn = document.getElementById('addTaskBtn');
+  const taskList = document.getElementById('taskList');
+
+  addTaskBtn.addEventListener('click', () => {
+    const taskText = taskInput.value.trim();
+    if (taskText !== '') {
+      const taskItem = document.createElement('li');
+      taskItem.classList.add('task');
+      taskItem.innerHTML = `
+        <span style="background-color:${colorPicker.value}"></span>
+        <span>${taskText}</span>
+        <span class="delete">❌</span>
+      `;
+      taskList.appendChild(taskItem);
+      taskInput.value = '';
+
+      taskItem.addEventListener('click', () => {
+        taskItem.classList.toggle('completed');
+      });
+
+      const deleteBtn = taskItem.querySelector('.delete');
+      deleteBtn.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent task completion when clicking delete
+        taskItem.remove();
+      });
+    } else {
+      alert('Please enter a task!');
+    }
+  });
+
+  taskList.addEventListener('transitionend', (e) => {
+    if (e.propertyName === 'opacity' && e.target.classList.contains('completed')) {
+      e.target.remove();
+    }
+  });
+</script>
+
+</body>
+</html>
